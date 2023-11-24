@@ -11,4 +11,8 @@ include __DIR__ . '/../header.php';
 <?php if ($user !== null && $user->isAdmin()): ?>
     <p><a href="/articles/<?= $article->getId() ?>/edit">Редактировать статью</a></p>
 <?php endif; ?>
+<p style="font-style: italic">Комментарии к статье:</p>
+<ul>
+    <li></li>
+</ul>
 <?php include __DIR__ . '/../footer.php'; ?>
