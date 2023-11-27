@@ -32,3 +32,32 @@
 a, a:visited {
     color: darkgreen;
 }
+
+.my-comment-amount {
+    font-family: "Roboto","Arial",sans-serif;
+    font-size: 1.5rem;
+    line-height: 2.8rem;
+    font-weight: 700;
+    margin-top: 40px;
+}
+
+.my-comments-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.my-comment-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #909090;
+    margin-bottom: 6px;
+}
+
+.my-comment-input:focus {
+    outline: none;
+    border-bottom: 2px solid #000
+}
+
+.my-comment-date {
+    font-size: smaller;
+}

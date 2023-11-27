@@ -54,14 +54,6 @@ class Article extends ActiveRecordEntity
     }
 
     /**
-     * @param int $authorId
-     */
-    public function setAuthorId(int $authorId): void
-    {
-        $this->authorId = $authorId;
-    }
-
-    /**
      * @return User
      */
     public function getAuthor(): User
