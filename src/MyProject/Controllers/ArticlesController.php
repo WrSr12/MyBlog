@@ -7,7 +7,6 @@ use MyProject\Exceptions\InvalidArgumentException;
 use MyProject\Exceptions\NotFoundException;
 use MyProject\Exceptions\UnauthorizedException;
 use MyProject\Models\Articles\Article;
-use MyProject\Models\Users\User;
 
 class ArticlesController extends AbstractController
 {
@@ -88,7 +87,7 @@ class ArticlesController extends AbstractController
         }
 
         $article->delete();
-        $this->view->renderHtml('articles/delete_success.php');
+        $this->view->renderHtml('articles/successfulDeletion.php');
     }
 
 }

@@ -12,29 +12,44 @@ use MyProject\Services\Db;
 
 class Comment extends ActiveRecordEntity
 {
-    /**
-     * @var int
-     */
-    protected $authorId;
+    protected int $authorId;
 
-    /**
-     * @var int
-     */
-    protected $articleId;
+    protected int $articleId;
 
-    /**
-     * @var string
-     */
-    protected $text;
+    protected string $text;
 
-    /**
-     * @var string
-     */
-    protected $createdAt;
+    protected ?string $createdAt = null;
 
-    protected static function getTableName(): string
+    public static function create(array $post, User $author, int $articleId): Comment
     {
-        return 'comments';
+        if (empty($post['text']) || strlen($post['text']) > 10) {
+            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 10 символов');
+        }
+
+        $text = $post['text'];
+
+        $comment = new Comment();
+
+        $comment->setAuthor($author);
+        $comment->setArticleId($articleId);
+        $comment->setText($text);
+
+        $comment->save();
+
+        return $comment;
+    }
+
+    public function update(array $post): Comment
+    {
+        if (empty($post['text']) || strlen($post['text']) > 10) {
+            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 10 символов');
+        }
+
+        $this->setText($post['text']);
+
+        $this->save();
+
+        return $this;
     }
 
     public static function getAllByArticleId(int $articleId): ?array
@@ -70,45 +85,19 @@ class Comment extends ActiveRecordEntity
         return $amountComments . ' комментариев';
     }
 
-    public static function create(string $text, User $author, int $articleId): Comment
-    {
-        if (empty($text) || strlen($text) > 300) {
-            throw new InvalidArgumentException();
-        }
-
-        $comment = new Comment();
-
-        $comment->setAuthor($author);
-        $comment->setArticleId($articleId);
-        $comment->setText($text);
-
-        $comment->save();
-
-        return $comment;
-    }
-
-    /**
-     * @param string $text
-     */
-    public function setText(string $text): void
-    {
-        $this->text = $text;
-    }
-
-    /**
-     * @param User $author
-     */
     public function setAuthor(User $author): void
     {
         $this->authorId = $author->getId();
     }
 
-    /**
-     * @param int $articleId
-     */
     public function setArticleId(int $articleId): void
     {
         $this->articleId = $articleId;
+    }
+
+    public function setText(string $text): void
+    {
+        $this->text = $text;
     }
 
     /**
@@ -127,20 +116,29 @@ class Comment extends ActiveRecordEntity
         return User::getById($this->authorId)->getId();
     }
 
-    /**
-     * @return string
-     */
+    public function getArticleId(): int
+    {
+        return $this->articleId;
+    }
+
+    public function getArticleName(): string
+    {
+        return Article::getById($this->articleId)->getName();
+    }
+
     public function getText(): string
     {
         return $this->text;
     }
 
-    /**
-     * @return string
-     */
     public function getCreatedAt(): string
     {
         $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $this->createdAt);
         return $date->format('d.m.Y') . ' в ' . $date->format('H:i');
+    }
+
+    protected static function getTableName(): string
+    {
+        return 'comments';
     }
 }

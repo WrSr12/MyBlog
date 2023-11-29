@@ -16,24 +16,19 @@ include __DIR__ . '/../header.php';
     <p><a href="/articles/<?= $article->getId() ?>/edit">Редактировать статью</a></p>
 <?php endif; ?>
 
-<p class="my-comment-amount"><?= Comment::getAmountByArticle($article->getId()) ?></p>
+<p id="comment-amount" class="my-comment-amount"><?= Comment::getAmountByArticle($article->getId()) ?></p>
 
 <?php if ($user === null): ?>
     <p><a href="/users/login">Авторизуйтесь</a>, чтобы оставить комментарий</p>
 <?php else: ?>
     <div class="mb-3">
-        <?php if (isset($_GET['error'])): ?>
-            <div style="color: red; font-size: 0.9rem">Комментарий не может быть пустым и не может содержать более 300
-                символов
-            </div>
-        <?php endif; ?>
         <form action="/articles/<?= $article->getId() ?>/comments" method="post">
             <input type="text" name="text" id="comment" class="my-comment-input" placeholder="Введите комментарий">
             <div class="d-flex justify-content-end">
                 <input type="reset" value="Отмена" class="btn btn-light me-1"
                        style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .9rem;">
                 <input type="submit" value="Оставить комментарий" class="btn btn-secondary"
-                       style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .9rem;">
+                       style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: 1rem;">
             </div>
         </form>
     </div>
@@ -44,7 +39,7 @@ $comments = Comment::getAllByArticleId($article->getId());
 if (!is_null($comments)): ?>
     <ul class="my-comments-list">
         <?php foreach ($comments as $comment): ?>
-            <li class="mb-4" id="<?= $comment->getId() ?>">
+            <li class="mb-4" id="comment<?= $comment->getId() ?>">
                 <div class="m-0 p-0">
                     <span class="fw-bolder text-primary"><?= $comment->getAuthorName() ?></span>
                     <span class="fw-light my-comment-date me-1"><?= $comment->getCreatedAt() ?></span>
@@ -70,7 +65,7 @@ if (!is_null($comments)): ?>
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <form action="/articles/<?= $article->getId() ?>/comments/<?= $comment->getId() ?>/edit"
+                            <form action="/comments/<?= $comment->getId() ?>/edit"
                                   method="post">
                                 <div class="modal-body">
                                     <textarea name="text" class="form-control"
@@ -91,7 +86,7 @@ if (!is_null($comments)): ?>
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <form action="/articles/<?= $article->getId() ?>/comments/<?= $comment->getId() ?>/delete"
+                            <form action="/comments/<?= $comment->getId() ?>/delete"
                                   method="post">
                                 <div class="modal-body">
                                     <?= $comment->getText() ?>
@@ -112,5 +107,4 @@ if (!is_null($comments)): ?>
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
-
 <?php include __DIR__ . '/../footer.php'; ?>

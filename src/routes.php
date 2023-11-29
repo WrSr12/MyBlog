@@ -11,6 +11,6 @@ return [
     '~^users/login$~' => [\MyProject\Controllers\UsersController::class, 'login'],
     '~^users/logout$~' => [\MyProject\Controllers\UsersController::class, 'logout'],
     '~^articles/(\d+)/comments$~' => [\MyProject\Controllers\CommentsController::class, 'add'],
-    '~^articles/(\d+)/comments/(\d+)/edit$~' => [\MyProject\Controllers\CommentsController::class, 'edit'],
-    '~^articles/(\d+)/comments/(\d+)/delete$~' => [\MyProject\Controllers\CommentsController::class, 'delete'],
+    '~^comments/(\d+)/edit$~' => [\MyProject\Controllers\CommentsController::class, 'edit'],
+    '~^comments/(\d+)/delete$~' => [\MyProject\Controllers\CommentsController::class, 'delete'],
 ];

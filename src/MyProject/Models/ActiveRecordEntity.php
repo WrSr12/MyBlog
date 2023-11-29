@@ -7,16 +7,7 @@ use MyProject\Services\Db;
 
 abstract class ActiveRecordEntity
 {
-    /** @var int */
-    protected $id;
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
+    protected ?int $id = null;
 
     public function __set(string $name, $value)
     {
@@ -24,13 +15,14 @@ abstract class ActiveRecordEntity
         $this->$camelCaseName = $value;
     }
 
-    private function underscoreToCamelCase(string $source): string
+    public function getId(): int
     {
-        return lcfirst(str_replace('_', '', ucwords($source, '_')));
+        return $this->id;
     }
 
     /**
      * @return static[]
+     * @throws DbException
      */
     public static function findAll(): array
     {
@@ -81,6 +73,18 @@ abstract class ActiveRecordEntity
             $this->insert($mappedProperties);
         }
     }
+
+    public function delete(): void
+    {
+        $sql = 'DELETE FROM ' . static::getTableName() . ' WHERE `id` = :id;';
+
+        $db = Db::getInstance();
+        $db->query($sql, [':id' => $this->id], static::class);
+
+        $this->id = null;
+    }
+
+    abstract protected static function getTableName(): string;
 
     /**
      * @throws DbException
@@ -140,17 +144,9 @@ abstract class ActiveRecordEntity
         }
     }
 
-    /**
-     * @throws DbException
-     */
-    public function delete(): void
+    private function underscoreToCamelCase(string $source): string
     {
-        $sql = 'DELETE FROM ' . static::getTableName() . ' WHERE `id` = :id;';
-
-        $db = Db::getInstance();
-        $db->query($sql, [':id' => $this->id], static::class);
-
-        $this->id = null;
+        return lcfirst(str_replace('_', '', ucwords($source, '_')));
     }
 
     private function mapPropertiesToDbFormat(): array
@@ -163,7 +159,6 @@ abstract class ActiveRecordEntity
             $propertyName = $property->getName();
             $propertyNameAsUnderscore = $this->camelCaseToUnderscore($propertyName);
             $mappedProperties[$propertyNameAsUnderscore] = $this->$propertyName;
-
         }
 
         return $mappedProperties;
@@ -174,6 +169,6 @@ abstract class ActiveRecordEntity
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $source));
     }
 
-    abstract protected static function getTableName(): string;
+
 
 }

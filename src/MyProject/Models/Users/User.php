@@ -140,25 +140,16 @@ class User extends ActiveRecordEntity
         $this->authToken = sha1(random_bytes(100)) . sha1(random_bytes(100));
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * @return bool
-     */
     public function isConfirmed(): bool
     {
         return (bool)$this->isConfirmed;
     }
 
-    /**
-     * @return string
-     */
     public function getAuthToken(): string
     {
         return $this->authToken;
