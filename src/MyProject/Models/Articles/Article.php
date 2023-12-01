@@ -66,6 +66,11 @@ class Article extends ActiveRecordEntity
         return $this;
     }
 
+    public function getShortText(): string
+    {
+        return mb_substr($this->getText(), 0, 100) . ' ...';
+    }
+
     public function setName(string $name): void
     {
         $this->name = $name;

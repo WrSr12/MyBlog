@@ -117,7 +117,7 @@ class User extends ActiveRecordEntity
         }
 
         if (!password_verify($loginData['password'], $user->getPasswordHash())) {
-            throw new InvalidArgumentException('Неправильный пароль');
+            throw new InvalidArgumentException('Неверный пароль');
         }
 
         if (!$user->isConfirmed) {

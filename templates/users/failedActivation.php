@@ -1,8 +1,6 @@
 <?php include __DIR__ . '/../header.php'; ?>
-<div style="text-align: center;">
-    <h1 style="color: #58151c">Не удалось активировать пользователя</h1><br>
-    <div style="background-color: #f8d7da; color: #58151c; padding: 30px;">
-        <?= $error ?>
-    </div>
+<div class="alert alert-danger text-center" role="alert">
+    <h5>Не удалось активировать пользователя &#9785;</h5>
+    <?= !empty($error) ? $error : 'Ошибка на стороне сервера' ?>
 </div>
 <?php include __DIR__ . '/../footer.php'; ?>

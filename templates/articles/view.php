@@ -9,13 +9,17 @@ use MyProject\Models\Comments\Comment;
 include __DIR__ . '/../header.php';
 ?>
 <h1><?= $article->getName() ?></h1>
-<p>Автор: <i><?= $article->getAuthor()->getNickname() ?></i></p>
+<p>Автор: <i><?= $article->getAuthor()->getNickname() ?></i>
+
+</p>
 <p><?= $article->getText() ?></p>
-
 <?php if ($user !== null && $user->isAdmin()): ?>
-    <p><a href="/articles/<?= $article->getId() ?>/edit">Редактировать статью</a></p>
+    <p>
+        <a href="/articles/<?= $article->getId() ?>/edit" type="button" class="btn btn-outline-secondary"
+       style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;">Редактировать
+        статью</a>
+    </p>
 <?php endif; ?>
-
 <p id="comment-amount" class="my-comment-amount"><?= Comment::getAmountByArticle($article->getId()) ?></p>
 
 <?php if ($user === null): ?>
@@ -23,7 +27,12 @@ include __DIR__ . '/../header.php';
 <?php else: ?>
     <div class="mb-3">
         <form action="/articles/<?= $article->getId() ?>/comments" method="post">
-            <input type="text" name="text" id="comment" class="my-comment-input" placeholder="Введите комментарий">
+            <input type="text"
+                   name="commentText"
+                   id="comment"
+                   class="my-comment-input"
+                   placeholder="Введите комментарий"
+            >
             <div class="d-flex justify-content-end">
                 <input type="reset" value="Отмена" class="btn btn-light me-1"
                        style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .9rem;">

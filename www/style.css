@@ -1,10 +1,10 @@
 .layout {
     width: 100%;
     max-width: 1024px;
+    height: 100vh;
     margin: auto;
     background-color: white;
     border-collapse: collapse;
-    height: 200px;
 }
 
 .layout tr td {
@@ -13,12 +13,20 @@
     border: solid 1px gray;
 }
 
-.header {
+.layout .header {
+    border-right: none;
     font-size: 30px;
+    height: 70px;
+}
+
+.layout .headerAuthorization {
+    border-left: none;
+    vertical-align: middle;
 }
 
 .footer {
     text-align: center;
+    height: 50px;
 }
 
 .sidebarHeader {
@@ -60,4 +68,14 @@ a, a:visited {
 
 .my-comment-date {
     font-size: smaller;
+}
+
+.formAuthorization {
+    margin: auto;
+    border-collapse: collapse;
+}
+
+.formAuthorization tr td {
+    padding: 5px;
+    border: none;
 }

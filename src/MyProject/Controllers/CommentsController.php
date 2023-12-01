@@ -6,7 +6,6 @@ use MyProject\Exceptions\ForbiddenException;
 use MyProject\Exceptions\InvalidArgumentException;
 use MyProject\Exceptions\NotFoundException;
 use MyProject\Exceptions\UnauthorizedException;
-use MyProject\Models\Articles\Article;
 use MyProject\Models\Comments\Comment;
 
 class CommentsController extends AbstractController
@@ -21,8 +20,7 @@ class CommentsController extends AbstractController
             try {
                 $comment = Comment::create($_POST, $this->user, $articleId);
             } catch (InvalidArgumentException $e) {
-                $article = Article::getById($articleId);
-                $this->view->renderHtml('comments/addFailed.php', ['article' => $article, 'error' => $e->getMessage()]);
+                $this->view->renderHtml('errors/422.php', ['error' => $e->getMessage()]);
                 return;
             }
 

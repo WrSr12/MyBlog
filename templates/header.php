@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="/style.css">
     <title>Мой блог</title>
 </head>
@@ -11,12 +12,10 @@
 
 <table class="layout">
     <tr>
-        <td colspan="2" class="header">
+        <td class="header">
             Мой блог
         </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="text-align: right">
+        <td class="headerAuthorization">
             <?php if (!empty($user)): ?>
                 Привет, <?= $user->getNickname() ?> | <a href="/users/logout">Выйти</a>
             <?php else: ?>

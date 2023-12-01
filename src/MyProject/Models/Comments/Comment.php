@@ -2,7 +2,6 @@
 
 namespace MyProject\Models\Comments;
 
-use DateTimeImmutable;
 use MyProject\Exceptions\DbException;
 use MyProject\Exceptions\InvalidArgumentException;
 use MyProject\Models\ActiveRecordEntity;
@@ -22,8 +21,8 @@ class Comment extends ActiveRecordEntity
 
     public static function create(array $post, User $author, int $articleId): Comment
     {
-        if (empty($post['text']) || strlen($post['text']) > 10) {
-            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 10 символов');
+        if (empty($post['text']) || strlen($post['text']) > 50) {
+            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 50 символов');
         }
 
         $text = $post['text'];
@@ -129,12 +128,6 @@ class Comment extends ActiveRecordEntity
     public function getText(): string
     {
         return $this->text;
-    }
-
-    public function getCreatedAt(): string
-    {
-        $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $this->createdAt);
-        return $date->format('d.m.Y') . ' в ' . $date->format('H:i');
     }
 
     protected static function getTableName(): string

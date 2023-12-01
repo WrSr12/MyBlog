@@ -2,6 +2,7 @@
 
 namespace MyProject\Models;
 
+use DateTimeImmutable;
 use MyProject\Exceptions\DbException;
 use MyProject\Services\Db;
 
@@ -46,6 +47,12 @@ abstract class ActiveRecordEntity
         return $entity ? $entity[0] : null;
     }
 
+    public static function getTheLastEntries(int $numEntries): array
+    {
+        $db = Db::getInstance();
+        return $db->query('SELECT * FROM `' . static::getTableName() . '`ORDER BY `id` DESC LIMIT ' . $numEntries . ';', [], static::class);
+    }
+
     public static function findOneByColumn(string $columnName, $value): ?self
     {
         $db = Db::getInstance();
@@ -84,6 +91,12 @@ abstract class ActiveRecordEntity
         $this->id = null;
     }
 
+    public function getCreatedAt(): string
+    {
+        $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $this->createdAt);
+        return $date->format('d.m.Y') . ' в ' . $date->format('H:i');
+    }
+
     abstract protected static function getTableName(): string;
 
     /**
@@ -114,7 +127,7 @@ abstract class ActiveRecordEntity
         $paramsNames = [];
         $params2values = [];
         foreach ($filteredProperties as $columnName => $value) {
-            $columns[] = '`' . $columnName. '`';
+            $columns[] = '`' . $columnName . '`';
             $paramName = ':' . $columnName;
             $paramsNames[] = $paramName;
             $params2values[$paramName] = $value;
@@ -168,7 +181,6 @@ abstract class ActiveRecordEntity
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $source));
     }
-
 
 
 }
