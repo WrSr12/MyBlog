@@ -1,6 +1,12 @@
-<?php include __DIR__ . '/../header.php'; ?>
+<?php
+/**
+ * @var \MyProject\Models\Articles\Article[] $articles
+ */
+
+include __DIR__ . '/../header.php';
+?>
 <?php foreach ($articles as $article): ?>
-    <h2><a href="/articles/<?= $article->getId() ?>"><?= $article->getName() ?></a></h2>
+    <h5><a href="/articles/<?= $article->getId() ?>"><?= $article->getName() ?></a></h5>
     <p><?= $article->getShortText() ?></p>
     <hr>
 <?php endforeach; ?>

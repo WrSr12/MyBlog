@@ -13,7 +13,7 @@
 <table class="layout">
     <tr>
         <td class="header">
-            Мой блог
+            <h4><a href="/">Мой блог</a></h4>
         </td>
         <td class="headerAuthorization">
             <?php if (!empty($user)): ?>

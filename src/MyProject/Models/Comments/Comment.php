@@ -4,6 +4,7 @@ namespace MyProject\Models\Comments;
 
 use MyProject\Exceptions\DbException;
 use MyProject\Exceptions\InvalidArgumentException;
+use MyProject\Exceptions\NotFoundArgumentException;
 use MyProject\Models\ActiveRecordEntity;
 use MyProject\Models\Articles\Article;
 use MyProject\Models\Users\User;
@@ -19,13 +20,17 @@ class Comment extends ActiveRecordEntity
 
     protected ?string $createdAt = null;
 
-    public static function create(array $post, User $author, int $articleId): Comment
+    public static function createFromArray(array $post, User $author, int $articleId): Comment
     {
-        if (empty($post['text']) || strlen($post['text']) > 50) {
-            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 50 символов');
+        if (!isset($post['addCommentText'])) {
+            throw new NotFoundArgumentException('Ошибка при передаче текста комментария');
         }
 
-        $text = $post['text'];
+        $text = trim($post['addCommentText']);
+
+        if (empty($text) || strlen($text) > 150) {
+            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 150 символов');
+        }
 
         $comment = new Comment();
 
@@ -38,13 +43,19 @@ class Comment extends ActiveRecordEntity
         return $comment;
     }
 
-    public function update(array $post): Comment
+    public function updateFromArray(array $post): Comment
     {
-        if (empty($post['text']) || strlen($post['text']) > 10) {
-            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 10 символов');
+        if (!isset($post['editCommentText'])) {
+            throw new NotFoundArgumentException('Ошибка при передаче текста комментария');
         }
 
-        $this->setText($post['text']);
+        $text = trim($post['editCommentText']);
+
+        if (empty($text) || strlen($text) > 150) {
+            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 150 символов');
+        }
+
+        $this->setText($text);
 
         $this->save();
 

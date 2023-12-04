@@ -3,6 +3,7 @@
 namespace MyProject\Models\Articles;
 use MyProject\Exceptions\DbException;
 use MyProject\Exceptions\InvalidArgumentException;
+use MyProject\Models\Comments\Comment;
 use MyProject\Models\Users\User;
 use MyProject\Models\ActiveRecordEntity;
 
@@ -99,6 +100,16 @@ class Article extends ActiveRecordEntity
     public function getAuthor(): User
     {
         return User::getById($this->authorId);
+    }
+
+    public function getComments(): ?array
+    {
+        return Comment::getAllByArticleId($this->id);
+    }
+
+    public function getCommentsAmount(): string
+    {
+        return Comment::getAmountByArticle($this->id);
     }
 
     protected static function getTableName(): string

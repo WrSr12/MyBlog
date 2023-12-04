@@ -4,23 +4,22 @@
  * @var \MyProject\Models\Users\User $user
  */
 
-use MyProject\Models\Comments\Comment;
-
 include __DIR__ . '/../header.php';
 ?>
-<h1><?= $article->getName() ?></h1>
-<p>Автор: <i><?= $article->getAuthor()->getNickname() ?></i>
-
+<h4><?= $article->getName() ?></h4>
+<p>
+    <span class="fst-italic fw-light">Автор: </span><span class="fw-bolder text-primary me-4"><?= $article->getAuthor()->getNickname() ?></span>
+    <span class="fst-italic fw-light">Дата публикации: </span><span class="fw-light my-comment-date me-1"><?= $article->getCreatedAt() ?></span>
 </p>
 <p><?= $article->getText() ?></p>
 <?php if ($user !== null && $user->isAdmin()): ?>
     <p>
         <a href="/articles/<?= $article->getId() ?>/edit" type="button" class="btn btn-outline-secondary"
-       style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;">Редактировать
-        статью</a>
+           style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;">Редактировать
+            статью</a>
     </p>
 <?php endif; ?>
-<p id="comment-amount" class="my-comment-amount"><?= Comment::getAmountByArticle($article->getId()) ?></p>
+<p id="commentAmount" class="commentAmount"><?= $article->getCommentsAmount() ?></p>
 
 <?php if ($user === null): ?>
     <p><a href="/users/login">Авторизуйтесь</a>, чтобы оставить комментарий</p>
@@ -28,10 +27,11 @@ include __DIR__ . '/../header.php';
     <div class="mb-3">
         <form action="/articles/<?= $article->getId() ?>/comments" method="post">
             <input type="text"
-                   name="commentText"
-                   id="comment"
-                   class="my-comment-input"
+                   name="addCommentText"
+                   id="addCommentText"
+                   class="addCommentText"
                    placeholder="Введите комментарий"
+                   value="<?= $_POST['addCommentText'] ?? '' ?>"
             >
             <div class="d-flex justify-content-end">
                 <input type="reset" value="Отмена" class="btn btn-light me-1"
@@ -44,10 +44,9 @@ include __DIR__ . '/../header.php';
 <?php endif; ?>
 
 <?php
-$comments = Comment::getAllByArticleId($article->getId());
-if (!is_null($comments)): ?>
-    <ul class="my-comments-list">
-        <?php foreach ($comments as $comment): ?>
+if (!is_null($article->getComments())): ?>
+    <ul class="commentsList">
+        <?php foreach ($article->getComments() as $comment): ?>
             <li class="mb-4" id="comment<?= $comment->getId() ?>">
                 <div class="m-0 p-0">
                     <span class="fw-bolder text-primary"><?= $comment->getAuthorName() ?></span>
@@ -57,7 +56,7 @@ if (!is_null($comments)): ?>
                     <!-- Кнопка-триггер модального окна "Редактировать"-->
                     <button type="button" class="btn btn-outline-secondary"
                             style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;"
-                            data-bs-toggle="modal" data-bs-target="#edit<?= $comment->getId() ?>">
+                            data-bs-toggle="modal" data-bs-target="#editCommentText<?= $comment->getId() ?>">
                         Редактировать
                     </button>
                     <!-- Кнопка-триггер модального окна "Удалить"-->
@@ -69,7 +68,7 @@ if (!is_null($comments)): ?>
                 </div>
 
                 <!-- Модальное окно "Редактировать"-->
-                <div class="modal fade" id="edit<?= $comment->getId() ?>" tabindex="-1"
+                <div class="modal fade" id="editCommentText<?= $comment->getId() ?>" tabindex="-1"
                      aria-labelledby="exampleModalLabel"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -77,7 +76,7 @@ if (!is_null($comments)): ?>
                             <form action="/comments/<?= $comment->getId() ?>/edit"
                                   method="post">
                                 <div class="modal-body">
-                                    <textarea name="text" class="form-control"
+                                    <textarea name="editCommentText" class="form-control"
                                               rows="7"><?= $comment->getText() ?></textarea>
                                 </div>
                                 <div class="d-flex justify-content-end m-2">

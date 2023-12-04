@@ -34,7 +34,7 @@ class AdminsController extends AbstractController
 
         $lastArticles = Article::getTheLastEntries(5);
 
-        $this->view->renderHtml('admins/adminPanelArticles.php', ['articles' => $lastArticles]);
+        $this->view->renderHtml('admins/adminPanelArticles.php', ['user' => $this->user, 'articles' => $lastArticles]);
     }
 
     public function editComments()
@@ -49,6 +49,6 @@ class AdminsController extends AbstractController
 
         $lastComments = Comment::getTheLastEntries(10);
 
-        $this->view->renderHtml('admins/adminPanelComments.php', ['comments' => $lastComments]);
+        $this->view->renderHtml('admins/adminPanelComments.php', ['user' => $this->user, 'comments' => $lastComments]);
     }
 }

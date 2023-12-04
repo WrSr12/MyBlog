@@ -2,13 +2,12 @@
 
 <td width="300px" class="sidebar">
     <div class="sidebarHeader">Меню</div>
-    <ul>
+    <ul class="list-unstyled">
         <li><a href="/">Главная страница</a></li>
         <li><a href="/about-me">Обо мне</a></li>
         <?php if (!empty($user) && $user->isAdmin()): ?>
             <br>
             <li><a href="/administration">Панель администратора</a></li>
-            <li><a href="/articles/add">Добавить статью</a></li>
         <?php endif; ?>
     </ul>
 </td>
