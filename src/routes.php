@@ -16,4 +16,5 @@ return [
     '~^administration$~' => [\MyProject\Controllers\AdminsController::class, 'main'],
     '~^administration/articles$~' => [\MyProject\Controllers\AdminsController::class, 'editArticles'],
     '~^administration/comments$~' => [\MyProject\Controllers\AdminsController::class, 'editComments'],
+    '~^administration/site/name$~' => [\MyProject\Controllers\AdminsController::class, 'editSiteName'],
 ];

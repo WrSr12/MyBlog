@@ -28,8 +28,8 @@ class Comment extends ActiveRecordEntity
 
         $text = trim($post['addCommentText']);
 
-        if (empty($text) || strlen($text) > 150) {
-            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 150 символов');
+        if (empty($text) || mb_strlen($text) > 700) {
+            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 700 символов');
         }
 
         $comment = new Comment();
@@ -50,9 +50,8 @@ class Comment extends ActiveRecordEntity
         }
 
         $text = trim($post['editCommentText']);
-
-        if (empty($text) || strlen($text) > 150) {
-            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 150 символов');
+        if (empty($text) || mb_strlen($text) > 700) {
+            throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 700 символов');
         }
 
         $this->setText($text);
@@ -139,6 +138,15 @@ class Comment extends ActiveRecordEntity
     public function getText(): string
     {
         return $this->text;
+    }
+
+    public function getShortText(int $numCharacters): string
+    {
+        if (mb_strlen($this->getText()) <= $numCharacters) {
+            return $this->getText();
+        }
+
+        return mb_substr($this->getText(), 0, $numCharacters) . ' ...';
     }
 
     protected static function getTableName(): string

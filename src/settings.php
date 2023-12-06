@@ -6,5 +6,8 @@ return [
         'dbname' => 'my_project',
         'user' => 'root',
         'password' => '',
+    ],
+    'site' => [
+        'name' => 'Мой блог',
     ]
 ];

@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var \MyProject\Models\Users\User $user
+ */
+
+$siteName = (require __DIR__ . '/../src/settings.php')['site']['name'];
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -13,7 +20,7 @@
 <table class="layout">
     <tr>
         <td class="header">
-            <h4><a href="/">Мой блог</a></h4>
+            <h4><a href="/"><?= $siteName ?></a></h4>
         </td>
         <td class="headerAuthorization">
             <?php if (!empty($user)): ?>

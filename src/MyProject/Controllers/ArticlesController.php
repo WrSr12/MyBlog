@@ -87,8 +87,16 @@ class ArticlesController extends AbstractController
             throw new NotFoundException();
         }
 
+        if ($this->user === null) {
+            throw new UnauthorizedException();
+        }
+
+        if (!$this->user->isAdmin()) {
+            throw new ForbiddenException('Удалить статью может только администратор');
+        }
+
         $article->delete();
-        $this->view->renderHtml('articles/successfulDeletion.php');
+        $this->view->renderHtml('articles/successfulDeletion.php', ['deletedArticleName' => $article->getName()]);
     }
 
 }

@@ -50,7 +50,10 @@ try {
     $view = new \MyProject\View\View(__DIR__ . '/../templates/errors');
     $view->setVar('user', UsersAuthService::getUserByToken());
     $view->renderHtml('403.php', ['error' => $e->getMessage()], 403);
+} catch (\MyProject\Exceptions\InvalidArgumentException $e) {
+    $view = new \MyProject\View\View(__DIR__ . '/../templates/errors');
+    $view->setVar('user', UsersAuthService::getUserByToken());
+    $view->renderHtml('422.php', ['error' => $e->getMessage()], 422);
 }
-
 
 

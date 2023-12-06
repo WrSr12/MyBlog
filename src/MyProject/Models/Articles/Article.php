@@ -6,6 +6,7 @@ use MyProject\Exceptions\InvalidArgumentException;
 use MyProject\Models\Comments\Comment;
 use MyProject\Models\Users\User;
 use MyProject\Models\ActiveRecordEntity;
+use MyProject\Services\Db;
 
 class Article extends ActiveRecordEntity
 {
@@ -67,9 +68,23 @@ class Article extends ActiveRecordEntity
         return $this;
     }
 
-    public function getShortText(): string
+    public function delete(): void
     {
-        return mb_substr($this->getText(), 0, 100) . ' ...';
+        $sql = 'DELETE FROM ' . static::getTableName() . ' WHERE `id` = :id;';
+
+        $db = Db::getInstance();
+        $db->query($sql, [':id' => $this->id], static::class);
+
+        $this->id = null;
+    }
+
+    public function getShortText(int $numCharacters): string
+    {
+        if (mb_strlen($this->getText()) <= $numCharacters) {
+            return $this->getText();
+        }
+
+        return mb_substr($this->getText(), 0, $numCharacters) . ' ...';
     }
 
     public function setName(string $name): void
