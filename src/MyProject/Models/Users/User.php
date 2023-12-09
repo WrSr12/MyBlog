@@ -31,14 +31,6 @@ class User extends ActiveRecordEntity
     protected $createdAt;
 
     /**
-     * @return string
-     */
-    public function getNickname(): string
-    {
-        return $this->nickname;
-    }
-
-    /**
      * @throws InvalidArgumentException|DbException
      */
     public static function signUp(array $userData): User
@@ -130,14 +122,39 @@ class User extends ActiveRecordEntity
         return $user;
     }
 
+    public function getNickname(): string
+    {
+        return $this->nickname;
+    }
+
+    public function updateNickname(array $post): void
+    {
+        if (empty($post['nickname'])) {
+            throw new InvalidArgumentException('Новый никнейм не передан в запросе');
+        }
+
+        $newNickname = trim($post['nickname']);
+
+        if (empty($newNickname) || mb_strlen($newNickname) > 50 ) {
+            throw new InvalidArgumentException('Никнейм не может быть пустым и не может содержать более 50 символов');
+        }
+
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $newNickname)) {
+            throw new InvalidArgumentException('Nickname может состоять только из символов латинского алфавита и цифр');
+        }
+
+        if (static::findOneByColumn('nickname', $newNickname) !== null) {
+            throw new InvalidArgumentException('Пользователь с таким nickname уже существует');
+        }
+
+        $this->nickname = $newNickname;
+
+        $this->save();
+    }
+
     public function getPasswordHash(): string
     {
         return $this->passwordHash;
-    }
-
-    private function refreshAuthToken()
-    {
-        $this->authToken = sha1(random_bytes(100)) . sha1(random_bytes(100));
     }
 
     public function getEmail(): string
@@ -158,5 +175,10 @@ class User extends ActiveRecordEntity
     public function isAdmin(): bool
     {
         return $this->role == 'admin';
+    }
+
+    private function refreshAuthToken()
+    {
+        $this->authToken = sha1(random_bytes(100)) . sha1(random_bytes(100));
     }
 }

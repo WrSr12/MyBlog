@@ -53,18 +53,18 @@ include __DIR__ . '/../header.php';
     </div>
 <?php endif; ?>
 
-<div id="commentAmount" class="commentAmount"><?= $article->getCommentsAmount() ?></div>
+<div id="comments" class="commentAmount"><?= $article->getCommentsAmount() ?></div>
 
 <?php if ($user === null): ?>
     <p><a href="/users/login">Авторизуйтесь</a>, чтобы оставить комментарий</p>
 <?php else: ?>
     <div class="mb-3">
         <form action="/articles/<?= $article->getId() ?>/comments" method="post">
-            <textarea name="addCommentText"
+            <textarea name="text"
                       id="addCommentText"
                       class="addCommentText"
                       rows="1"
-                      placeholder="Введите комментарий"><?= $_POST['addCommentText'] ?? '' ?></textarea>
+                      placeholder="Введите комментарий"><?= $_POST['text'] ?? '' ?></textarea>
             <div class="d-flex justify-content-end">
                 <input type="reset" value="Отмена" class="btn btn-secondary me-1"
                        style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .9rem;">
@@ -88,9 +88,10 @@ if (!is_null($article->getComments())): ?>
                     <!-- Кнопка-триггер модального окна "Редактировать"-->
                     <button type="button" class="btn btn-outline-primary"
                             style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;"
-                            data-bs-toggle="modal" data-bs-target="#editCommentText<?= $comment->getId() ?>">
+                            data-bs-toggle="modal" data-bs-target="#edit<?= $comment->getId() ?>">
                         Редактировать
                     </button>
+
                     <!-- Кнопка-триггер модального окна "Удалить"-->
                     <button type="button" class="btn btn-outline-danger"
                             style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;"
@@ -100,50 +101,51 @@ if (!is_null($article->getComments())): ?>
                 </div>
 
                 <!-- Модальное окно "Редактировать"-->
-                <div class="modal fade" id="editCommentText<?= $comment->getId() ?>" tabindex="-1"
-                     aria-labelledby="exampleModalLabel"
+                <div class="modal fade" id="edit<?= $comment->getId() ?>" tabindex="-1"
+                     aria-labelledby="edit<?= $comment->getId() ?>"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <form action="/comments/<?= $comment->getId() ?>/edit"
-                                  method="post">
-                                <div class="modal-body">
-                                    <textarea name="editCommentText" class="form-control"
+                            <div class="modal-body">
+                                <form action="/comments/<?= $comment->getId() ?>/edit"
+                                      method="post">
+                                    <textarea name="text"
+                                              class="form-control"
                                               rows="7"><?= $comment->getText() ?></textarea>
-                                </div>
-                                <div class="d-flex justify-content-end m-2">
-                                    <button type="button"
-                                            class="btn btn-secondary me-1"
-                                            data-bs-dismiss="modal">
-                                        Отмена
-                                    </button>
-                                    <input type="submit" class="btn btn-primary" value="Сохранить изменения">
-                                </div>
-                            </form>
+                                    <div class="d-flex justify-content-end mt-2">
+                                        <button type="button"
+                                                class="btn btn-secondary me-1"
+                                                data-bs-dismiss="modal">
+                                            Отмена
+                                        </button>
+                                        <input type="submit" class="btn btn-primary" value="Сохранить изменения">
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Модальное окно "Удалить"-->
                 <div class="modal fade" id="delete<?= $comment->getId() ?>" tabindex="-1"
-                     aria-labelledby="exampleModalLabel"
+                     aria-labelledby="delete<?= $comment->getId() ?>"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <form action="/comments/<?= $comment->getId() ?>/delete"
-                                  method="post">
-                                <div class="modal-body">
-                                    <?= $comment->getText() ?>
-                                </div>
-                                <div class="d-flex justify-content-end m-2">
-                                    <button type="button"
-                                            class="btn btn-secondary me-1"
-                                            data-bs-dismiss="modal">
-                                        Отмена
-                                    </button>
-                                    <input type="submit" class="btn btn-danger" value="Удалить комментарий">
-                                </div>
-                            </form>
+                            <div class="modal-body">
+                                <form action="/comments/<?= $comment->getId() ?>/delete"
+                                      method="post">
+                                    <div><?= $comment->getText() ?></div>
+                                    <div class="d-flex justify-content-end m-2">
+                                        <button type="button"
+                                                class="btn btn-secondary me-1"
+                                                data-bs-dismiss="modal">
+                                            Отмена
+                                        </button>
+                                        <input type="submit" class="btn btn-danger" value="Удалить комментарий">
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

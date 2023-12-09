@@ -38,7 +38,7 @@ try {
     $view = new \MyProject\View\View(__DIR__ . '/../templates/errors');
     $view->setVar('user', UsersAuthService::getUserByToken());
     $view->renderHtml('404.php', ['error' => $e->getMessage()], 404);
-} catch (\MyProject\Exceptions\ActivationException|\MyProject\Exceptions\NotFoundArgumentException $e) {
+} catch (\MyProject\Exceptions\ActivationException $e) {
     $view = new \MyProject\View\View(__DIR__ . '/../templates/users');
     $view->setVar('user', UsersAuthService::getUserByToken());
     $view->renderHtml('failedActivation.php', ['error' => $e->getMessage()], 500);
@@ -54,6 +54,10 @@ try {
     $view = new \MyProject\View\View(__DIR__ . '/../templates/errors');
     $view->setVar('user', UsersAuthService::getUserByToken());
     $view->renderHtml('422.php', ['error' => $e->getMessage()], 422);
+} catch (\MyProject\Exceptions\NotFoundArgumentException $e) {
+    $view = new \MyProject\View\View(__DIR__ . '/../templates/errors');
+    $view->setVar('user', UsersAuthService::getUserByToken());
+    $view->renderHtml('400.php', ['error' => $e->getMessage()], 400);
 }
 
 

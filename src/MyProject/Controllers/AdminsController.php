@@ -21,10 +21,10 @@ class AdminsController extends AbstractController
             throw new ForbiddenException('Доступ только для администратора');
         }
 
-        $this->view->renderHtml('admins/adminPanelMain.php', ['user' => $this->user]);
+        $this->view->renderHtml('admins/adminPanel.php', ['user' => $this->user]);
     }
 
-    public function editArticles(): void
+    public function viewArticlesManagement(): void
     {
         if ($this->user === null) {
             throw new UnauthorizedException();
@@ -34,12 +34,11 @@ class AdminsController extends AbstractController
             throw new ForbiddenException('Доступ только для администратора');
         }
 
-        $lastArticles = Article::getTheLastEntries(5);
-
-        $this->view->renderHtml('admins/adminPanelArticles.php', ['user' => $this->user, 'articles' => $lastArticles]);
+        $lastArticles = Article::findLastEntriesWithLimit(15);
+        $this->view->renderHtml('admins/articlesManagement.php', ['user' => $this->user, 'articles' => $lastArticles]);
     }
 
-    public function editComments(): void
+    public function viewCommentsManagement(): void
     {
         if ($this->user === null) {
             throw new UnauthorizedException();
@@ -49,9 +48,8 @@ class AdminsController extends AbstractController
             throw new ForbiddenException('Доступ только для администратора');
         }
 
-        $lastComments = Comment::getTheLastEntries(10);
-
-        $this->view->renderHtml('admins/adminPanelComments.php', ['user' => $this->user, 'comments' => $lastComments]);
+        $lastComments = Comment::findLastEntriesWithLimit(20);
+        $this->view->renderHtml('admins/commentsManagement.php', ['user' => $this->user, 'comments' => $lastComments]);
     }
 
     public function editSiteName(): void
@@ -83,7 +81,7 @@ class AdminsController extends AbstractController
             exit();
         }
 
-        throw new NotFoundException('Не найдено новое название сайта в запросе');
+        throw new InvalidArgumentException('Не найдено новое название сайта в запросе');
     }
 
 }

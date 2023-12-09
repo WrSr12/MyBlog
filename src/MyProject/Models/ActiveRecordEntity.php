@@ -22,16 +22,6 @@ abstract class ActiveRecordEntity
     }
 
     /**
-     * @return static[]
-     * @throws DbException
-     */
-    public static function findAll(): array
-    {
-        $db = Db::getInstance();
-        return $db->query('SELECT * FROM `' . static::getTableName() . '`;', [], static::class);
-    }
-
-    /**
      * @param int $id
      * @return static|null
      * @throws DbException
@@ -47,12 +37,12 @@ abstract class ActiveRecordEntity
         return $entity ? $entity[0] : null;
     }
 
-    public static function getTheLastEntries(int $numEntries): array
-    {
-        $db = Db::getInstance();
-        return $db->query('SELECT * FROM `' . static::getTableName() . '`ORDER BY `id` DESC LIMIT ' . $numEntries . ';', [], static::class);
-    }
-
+    /**
+     * @param string $columnName
+     * @param $value
+     * @return static|null
+     * @throws DbException
+     */
     public static function findOneByColumn(string $columnName, $value): ?self
     {
         $db = Db::getInstance();
@@ -65,6 +55,39 @@ abstract class ActiveRecordEntity
             return null;
         }
         return $result[0];
+    }
+
+    /**
+     * @param int $limit
+     * @return static[]|null
+     * @throws DbException
+     */
+    public static function findLastEntriesWithLimit(int $limit): ?array
+    {
+        $db = Db::getInstance();
+        $result = $db->query(
+            'SELECT * FROM `' . static::getTableName() . '` ORDER BY `id` DESC LIMIT ' . $limit . ';',
+            [],
+            static::class);
+
+        if ($result === []) {
+            return null;
+        }
+        return $result;
+    }
+
+    public static function findLastEntriesByColumnWithLimit(string $columnName, mixed $value, int $limit): ?array
+    {
+        $db = Db::getInstance();
+        $result = $db->query(
+            'SELECT * FROM `' . static::getTableName() . '` WHERE `' . $columnName . '` = :value ORDER BY `id` DESC LIMIT ' . $limit . ';',
+            [':value' => $value],
+            static::class
+        );
+        if ($result === []) {
+            return null;
+        }
+        return $result;
     }
 
     /**

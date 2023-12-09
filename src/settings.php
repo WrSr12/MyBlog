@@ -8,6 +8,6 @@ return [
         'password' => '',
     ],
     'site' => [
-        'name' => 'Мой блог',
+        'name' => 'Blog',
     ]
 ];

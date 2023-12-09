@@ -20,15 +20,15 @@ class Comment extends ActiveRecordEntity
 
     protected ?string $createdAt = null;
 
-    public static function createFromArray(array $post, User $author, int $articleId): Comment
+    public static function create(array $post, User $author, int $articleId): Comment
     {
-        if (!isset($post['addCommentText'])) {
-            throw new NotFoundArgumentException('Ошибка при передаче текста комментария');
+        if (!isset($post['text'])) {
+            throw new InvalidArgumentException('В запросе не передан текст комментария');
         }
 
-        $text = trim($post['addCommentText']);
+        $commentText = trim($post['text']);
 
-        if (empty($text) || mb_strlen($text) > 700) {
+        if (empty($commentText) || mb_strlen($commentText) > 700) {
             throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 700 символов');
         }
 
@@ -36,25 +36,30 @@ class Comment extends ActiveRecordEntity
 
         $comment->setAuthor($author);
         $comment->setArticleId($articleId);
-        $comment->setText($text);
+        $comment->setText($commentText);
 
         $comment->save();
 
         return $comment;
     }
 
-    public function updateFromArray(array $post): Comment
+    public function update(array $post): Comment
     {
-        if (!isset($post['editCommentText'])) {
-            throw new NotFoundArgumentException('Ошибка при передаче текста комментария');
+        if (!isset($post['text'])) {
+            throw new InvalidArgumentException('В запросе не передан текст комментария');
         }
 
-        $text = trim($post['editCommentText']);
-        if (empty($text) || mb_strlen($text) > 700) {
+        $commentText = trim($post['text']);
+
+        if (empty($commentText) || mb_strlen($commentText) > 700) {
             throw new InvalidArgumentException('Комментарий не может быть пустым и не может быть длиннее 700 символов');
         }
 
-        $this->setText($text);
+        if ($this->getText() === $commentText) {
+            throw new InvalidArgumentException('Текст комментария не изменен');
+        }
+
+        $this->setText($commentText);
 
         $this->save();
 

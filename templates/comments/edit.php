@@ -15,9 +15,9 @@ include __DIR__ . '/../header.php';
 <?php endif; ?>
 <form action="/comments/<?= $comment->getId() ?>/edit"
       method="post">
-    <textarea name="editCommentText"
+    <textarea name="text"
               class="form-control mb-2"
-              rows="8"><?= !empty($_POST['editCommentText']) ? $_POST['editCommentText'] : $comment->getText() ?></textarea>
+              rows="8"><?= !empty($_POST['text']) ? $_POST['text'] : $comment->getText() ?></textarea>
     <div class="d-flex justify-content-end">
         <a type="button"
            class="btn btn-secondary me-1 text-white"
