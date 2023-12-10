@@ -30,6 +30,9 @@ class User extends ActiveRecordEntity
     /** @var string */
     protected $createdAt;
 
+    /** @var ?string */
+    protected $image = null;
+
     /**
      * @throws InvalidArgumentException|DbException
      */
@@ -70,6 +73,7 @@ class User extends ActiveRecordEntity
         $user = new User();
         $user->nickname = $userData['nickname'];
         $user->email = $userData['email'];
+        $user->image = (require __DIR__ . '/../../../settings.php')['user']['avatar'];
         $user->passwordHash = password_hash($userData['password'], PASSWORD_DEFAULT);
         $user->isConfirmed = false;
         $user->role = 'user';
@@ -86,11 +90,6 @@ class User extends ActiveRecordEntity
     {
         $this->isConfirmed = true;
         $this->save();
-    }
-
-    protected static function getTableName(): string
-    {
-        return 'users';
     }
 
     public static function login(array $loginData): User
@@ -135,7 +134,7 @@ class User extends ActiveRecordEntity
 
         $newNickname = trim($post['nickname']);
 
-        if (empty($newNickname) || mb_strlen($newNickname) > 50 ) {
+        if (empty($newNickname) || mb_strlen($newNickname) > 50) {
             throw new InvalidArgumentException('Никнейм не может быть пустым и не может содержать более 50 символов');
         }
 
@@ -149,6 +148,67 @@ class User extends ActiveRecordEntity
 
         $this->nickname = $newNickname;
 
+        $this->save();
+    }
+
+    public function updateImage(array $files)
+    {
+        if (empty($files['image']) || $files['image']['size'] === 0) {
+            throw new InvalidArgumentException('Файл не загружен');
+        }
+
+        $image = $files['image'];
+
+        // собираем путь до нового файла - папка uploads в текущей директории
+        //имя файла - текущая дата + уникальный id + имя загружаемого изображения
+        $imageName = date('d-m-Y') . '-' . uniqid() . '-' . $image['name'];
+        $newFilePath = __DIR__ . '/../../../../www/uploads/' . $imageName;
+
+        $allowedExtensions = ['jpg', 'png', 'gif'];
+        $extension = pathinfo($imageName, PATHINFO_EXTENSION);
+        $size = $image['size'] / (1024 * 1024);
+        if ($imageSize = getimagesize($image['tmp_name'])) {
+            $widthFile = $imageSize[0];
+            $heightFile = $imageSize[1];
+        } else {
+            $widthFile = $heightFile = null;
+        }
+
+        $phpFileUploadErrors = [
+            1 => 'Размер принятого файла превысил максимально допустимый размер',
+            2 => 'Размер принятого файла превысил максимально допустимый размер',
+            3 => 'Загружаемый файл был получен только частично',
+            4 => 'Файл не был загружен',
+            6 => 'Отсутствует временная папка',
+            7 => 'Не удалось записать файл на диск',
+            8 => 'Модуль PHP остановил загрузку файла',
+        ];
+
+        if ($size >= 8) {
+            throw new InvalidArgumentException('Размер файла не должен превышать 8 Мб');
+        }
+
+        if (!in_array($extension, $allowedExtensions)) {
+            throw new InvalidArgumentException('Загрузка файлов с таким расширением запрещена');
+        }
+
+        if ($image['error'] !== UPLOAD_ERR_OK) {
+            throw new InvalidArgumentException($phpFileUploadErrors[$image['error']]);
+        }
+
+        if (!$imageSize) {
+            throw new InvalidArgumentException('Файл не является изображением');
+        }
+
+        if ($widthFile > 1920 || $heightFile > 1080) {
+            throw new InvalidArgumentException('Размер изображения слишком велик');
+        }
+
+        if (!move_uploaded_file($image['tmp_name'], $newFilePath)) {
+            throw new InvalidArgumentException('Ошибка при загрузке файла');
+        }
+
+        $this->image = 'http://phpzonemvc.loc/uploads/' . $imageName;
         $this->save();
     }
 
@@ -177,8 +237,21 @@ class User extends ActiveRecordEntity
         return $this->role == 'admin';
     }
 
+    protected static function getTableName(): string
+    {
+        return 'users';
+    }
+
     private function refreshAuthToken()
     {
         $this->authToken = sha1(random_bytes(100)) . sha1(random_bytes(100));
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getImage(): ?string
+    {
+        return $this->image;
     }
 }

@@ -28,6 +28,12 @@
     vertical-align: middle;
 }
 
+.imageProfile {
+    max-height: 30px;
+    max-width: 25px;
+    vertical-align: bottom;
+}
+
 .footer {
     text-align: center;
     height: 50px;

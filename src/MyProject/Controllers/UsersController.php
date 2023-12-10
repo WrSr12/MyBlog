@@ -93,7 +93,7 @@ class UsersController extends AbstractController
 
     public function viewAccount(): void
     {
-        $this->view->renderHtml('users/account.php');
+        $this->view->renderHtml('users/account.php', ['user' => $this->user]);
     }
 
     public function viewCommentsManagement(): void
@@ -102,7 +102,7 @@ class UsersController extends AbstractController
         $this->view->renderHtml('users/commentsManagement.php', ['comments' => $comments]);
     }
 
-    public function editNickname()
+    public function editNickname(): void
     {
         if ($this->user === null) {
             throw new UnauthorizedException();
@@ -119,5 +119,24 @@ class UsersController extends AbstractController
         }
 
         $this->view->renderHtml('users/editNickname.php');
+    }
+
+    public function editImage(): void
+    {
+        if ($this->user === null) {
+            throw new UnauthorizedException();
+        }
+
+        if (!empty($_FILES)) {
+            try {
+                $this->user->updateImage($_FILES);
+                header('Location: /users/account');
+                exit();
+            } catch (InvalidArgumentException $e) {
+                $this->view->renderHtml('users/editImage.php', ['error' => $e->getMessage()]);
+            }
+        }
+
+        $this->view->renderHtml('users/editImage.php');
     }
 }

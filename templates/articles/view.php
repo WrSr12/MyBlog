@@ -81,6 +81,7 @@ if (!is_null($article->getComments())): ?>
         <?php foreach ($article->getComments() as $comment): ?>
             <li class="mb-4" id="comment<?= $comment->getId() ?>">
                 <div class="m-0 p-0">
+                    <img src="<?= $comment->getAuthorImage() ?>" class="imageProfile rounded">
                     <span class="fw-bolder text-primary"><?= $comment->getAuthorName() ?></span>
                     <span class="fw-light my-comment-date me-1"><?= $comment->getCreatedAt() ?></span>
 

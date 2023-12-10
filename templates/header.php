@@ -24,7 +24,9 @@ $siteName = (require __DIR__ . '/../src/settings.php')['site']['name'];
         </td>
         <td class="headerAuthorization">
             <?php if (!empty($user)): ?>
-               Привет, <a href="/users/account"><?= $user->getNickname() ?></a> | <a href="/users/logout">Выйти</a>
+                Привет,
+                <img src="<?= $user->getImage() ?>" class="imageProfile rounded me-1">
+                <a href="/users/account"><?= $user->getNickname() ?></a> | <a href="/users/logout">Выйти</a>
             <?php else: ?>
                 <a href="/users/login">Войти</a> | <a href="/users/register">Зарегистрироваться</a>
             <?php endif; ?>

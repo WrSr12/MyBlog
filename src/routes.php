@@ -12,6 +12,7 @@ return [
     '~^users/logout$~' => [\MyProject\Controllers\UsersController::class, 'logout'],
     '~^users/account$~' => [\MyProject\Controllers\UsersController::class, 'viewAccount'],
     '~^users/edit/nickname$~' => [\MyProject\Controllers\UsersController::class, 'editNickname'],
+    '~^users/edit/image$~' => [\MyProject\Controllers\UsersController::class, 'editImage'],
     '~^users/comments$~' => [\MyProject\Controllers\UsersController::class, 'viewCommentsManagement'],
     '~^articles/(\d+)/comments$~' => [\MyProject\Controllers\CommentsController::class, 'add'],
     '~^comments/(\d+)/edit$~' => [\MyProject\Controllers\CommentsController::class, 'edit'],

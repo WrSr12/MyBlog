@@ -122,6 +122,11 @@ class Comment extends ActiveRecordEntity
         return User::getById($this->authorId)->getNickname();
     }
 
+    public function getAuthorImage(): string
+    {
+        return User::getById($this->authorId)->getImage();
+    }
+
     /**
      * @throws DbException
      */

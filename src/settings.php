@@ -9,5 +9,8 @@ return [
     ],
     'site' => [
         'name' => 'Blog',
-    ]
+    ],
+    'user' => [
+        'avatar' => 'http://phpzonemvc.loc/uploads/avatar.png',
+    ],
 ];
